@@ -3,11 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <title>Puisi Cinta</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
     * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+        height: 100%;
+        overflow: hidden;
     }
 
     body {
@@ -17,14 +24,17 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
+        height: 100%;
         overflow: hidden;
         position: relative;
+        padding: 10px;
+        touch-action: manipulation;
     }
 
     /* Efek bintang latar belakang */
     .stars {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
@@ -47,7 +57,7 @@
 
     /* Efek partikel hati */
     .hearts {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
@@ -86,32 +96,34 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 90%;
+        width: 100%;
         max-width: 800px;
         position: relative;
         z-index: 2;
+        padding: 10px;
     }
 
     #startScreen, .page, #endScreen {
         text-align: center;
         display: none;
-        padding: 40px 30px;
+        padding: 30px 20px;
         width: 100%;
-        line-height: 1.8;
-        font-size: 26px;
+        line-height: 1.6;
+        font-size: clamp(18px, 5vw, 26px);
         animation: fadeIn 1s ease-out;
         border-radius: 20px;
         background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(15px);
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        margin-bottom: 20px;
+        margin-bottom: 15px;
+        -webkit-overflow-scrolling: touch;
     }
 
     @keyframes fadeIn {
         from { 
             opacity: 0; 
-            transform: translateY(30px) scale(0.95);
+            transform: translateY(20px) scale(0.98);
         }
         to { 
             opacity: 1; 
@@ -124,47 +136,50 @@
     }
 
     .title {
-        font-size: 3.5rem;
-        margin-bottom: 20px;
+        font-size: clamp(2rem, 8vw, 3.5rem);
+        margin-bottom: 15px;
         background: linear-gradient(45deg, #ff4f8a, #ff8fab, #ffb3c6);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         text-shadow: 0 5px 15px rgba(255, 79, 138, 0.3);
         font-weight: bold;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
+        line-height: 1.2;
     }
 
     .subtitle {
-        font-size: 1.2rem;
-        margin-bottom: 30px;
+        font-size: clamp(1rem, 4vw, 1.2rem);
+        margin-bottom: 25px;
         color: #e0e0e0;
         font-style: italic;
+        line-height: 1.4;
     }
 
     .btn {
-        padding: 16px 40px;
+        padding: clamp(14px, 4vw, 16px) clamp(30px, 8vw, 40px);
         background: linear-gradient(45deg, #ff4f8a, #e91e63);
         color: white;
         border: none;
         border-radius: 50px;
-        font-size: 22px;
+        font-size: clamp(18px, 4vw, 22px);
         cursor: pointer;
-        transition: all 0.4s ease;
+        transition: all 0.3s ease;
         font-weight: bold;
         box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
         position: relative;
         overflow: hidden;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        touch-action: manipulation;
     }
 
-    .btn:hover {
+    .btn:hover, .btn:active {
         background: linear-gradient(45deg, #ff6b9d, #ff4f8a);
-        transform: translateY(-5px);
+        transform: translateY(-3px);
         box-shadow: 0 12px 30px rgba(233, 30, 99, 0.6);
-    }
-
-    .btn:active {
-        transform: translateY(-2px);
     }
 
     .btn::after {
@@ -178,7 +193,7 @@
         transition: 0.5s;
     }
 
-    .btn:hover::after {
+    .btn:hover::after, .btn:active::after {
         left: 100%;
     }
 
@@ -188,22 +203,27 @@
     }
 
     .page-content {
-        min-height: 250px;
+        min-height: clamp(180px, 40vh, 250px);
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
-        margin-bottom: 30px;
+        padding: 15px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-style: italic;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        hyphens: auto;
     }
 
     .music-control {
         position: fixed;
-        bottom: 30px;
-        right: 30px;
+        bottom: 20px;
+        right: 20px;
         background: rgba(255, 255, 255, 0.1);
         border-radius: 50%;
-        width: 60px;
-        height: 60px;
+        width: clamp(50px, 12vw, 60px);
+        height: clamp(50px, 12vw, 60px);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -213,16 +233,17 @@
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
         border: 1px solid rgba(255, 255, 255, 0.1);
+        touch-action: manipulation;
     }
 
-    .music-control:hover {
+    .music-control:hover, .music-control:active {
         transform: scale(1.1);
         background: rgba(255, 255, 255, 0.15);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
     .music-control i {
-        font-size: 28px;
+        font-size: clamp(24px, 6vw, 28px);
         color: #ff4f8a;
     }
 
@@ -233,7 +254,7 @@
         background: rgba(255, 255, 255, 0.1);
         border-radius: 10px;
         overflow: hidden;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
 
     .progress-bar {
@@ -246,17 +267,17 @@
     }
 
     .page-indicator {
-        font-size: 16px;
+        font-size: clamp(14px, 3.5vw, 16px);
         color: rgba(255, 255, 255, 0.7);
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
 
     /* Style untuk gambar penutup */
     .closing-image {
-        max-width: 300px;
-        max-height: 300px;
+        max-width: min(300px, 80vw);
+        max-height: min(300px, 80vw);
         border-radius: 20px;
-        margin: 30px 0;
+        margin: 20px 0;
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         border: 3px solid rgba(255, 255, 255, 0.2);
         animation: imageFloat 4s ease-in-out infinite;
@@ -264,15 +285,16 @@
 
     @keyframes imageFloat {
         0%, 100% { transform: translateY(0) scale(1); }
-        50% { transform: translateY(-10px) scale(1.02); }
+        50% { transform: translateY(-8px) scale(1.02); }
     }
 
     .closing-message {
-        font-size: 1.3rem;
-        margin: 20px 0;
+        font-size: clamp(1.1rem, 4vw, 1.3rem);
+        margin: 15px 0;
         color: #ffb3c6;
         font-style: italic;
         text-shadow: 0 2px 10px rgba(255, 179, 198, 0.3);
+        line-height: 1.4;
     }
 
     /* Efek teks berkilau */
@@ -290,42 +312,72 @@
         100% { background-position: 200% 0; }
     }
 
-    /* Responsif untuk perangkat mobile */
-    @media (max-width: 768px) {
-        .title {
-            font-size: 2.5rem;
+    /* Optimasi untuk landscape mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+        body {
+            padding: 5px;
         }
         
-        .page {
-            font-size: 22px;
-            padding: 30px 20px;
+        .container {
+            padding: 5px;
         }
         
-        .btn {
-            padding: 14px 35px;
-            font-size: 20px;
+        #startScreen, .page, #endScreen {
+            padding: 15px 10px;
+            margin-bottom: 10px;
         }
         
         .page-content {
-            min-height: 200px;
-            margin-bottom: 20px;
+            min-height: 120px;
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            min-height: 40px;
         }
         
         .closing-image {
-            max-width: 250px;
-            max-height: 250px;
-        }
-        
-        .closing-message {
-            font-size: 1.1rem;
+            max-width: 150px;
+            max-height: 150px;
+            margin: 10px 0;
         }
     }
 
-    @media (max-width: 480px) {
-        .closing-image {
-            max-width: 200px;
-            max-height: 200px;
+    /* Optimasi untuk layar sangat kecil */
+    @media (max-width: 320px) {
+        #startScreen, .page, #endScreen {
+            padding: 20px 15px;
         }
+        
+        .page-content {
+            min-height: 150px;
+            padding: 10px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            font-size: 16px;
+        }
+    }
+
+    /* Mencegah zoom pada input focus di iOS */
+    @media screen and (max-width: 768px) {
+        input, select, textarea {
+            font-size: 16px;
+        }
+    }
+
+    /* Optimasi performa untuk perangkat rendah */
+    .stars, .hearts {
+        will-change: transform, opacity;
     }
 </style>
 </head>
@@ -350,7 +402,7 @@
 <div class="container">
     <!-- 🟣 HALAMAN AWAL -->
     <div id="startScreen">
-        <h1 class="title">Puisi untuk Cintaku ratus pesona gadis alban</h1>
+        <h1 class="title">Puisi Cinta</h1>
         <p class="subtitle">Sebuah perjalanan kata tentang cinta dan takdir</p>
         <button class="btn" onclick="startPoem()">Mulai Membaca</button>
     </div>
@@ -371,11 +423,12 @@
 
     <!-- 🟣 HALAMAN PENUTUP DENGAN GAMBAR -->
     <div id="endScreen">
-        <h2 class="title" style="font-size: 2.5rem;">Terima Kasih</h2>
+        <h2 class="title" style="font-size: clamp(1.8rem, 6vw, 2.5rem);">Terima Kasih</h2>
         <p class="closing-message">Untuk semua momen indah yang telah kita lewati bersama</p>
         
         <!-- Ganti URL gambar di bawah ini dengan gambar yang Anda inginkan -->
-        <img src="ga.jpg"alt="Momen Indah" 
+        <img src="https://images.unsplash.com/photo-1516487106395-f3c55b3f4b1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
+             alt="Momen Indah" 
              class="closing-image">
         
         <p class="closing-message">Selalu ada untukmu, hari ini dan selamanya</p>
@@ -436,7 +489,7 @@ let speed = 40; // kecepatan ketikan
 // ============================
 function createStars() {
     const starsContainer = document.getElementById('stars');
-    const starCount = 200;
+    const starCount = 150; // Dikurangi untuk performa mobile
     
     for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
@@ -447,11 +500,11 @@ function createStars() {
         const y = Math.random() * 100;
         
         // Ukuran acak
-        const size = Math.random() * 3;
+        const size = Math.random() * 2 + 1; // Ukuran lebih konsisten
         
         // Durasi animasi acak
-        const duration = 3 + Math.random() * 7;
-        const delay = Math.random() * 5;
+        const duration = 3 + Math.random() * 4;
+        const delay = Math.random() * 3;
         
         star.style.left = `${x}%`;
         star.style.top = `${y}%`;
@@ -469,7 +522,7 @@ function createStars() {
 // ============================
 function createHearts() {
     const heartsContainer = document.getElementById('hearts');
-    const heartCount = 15;
+    const heartCount = 10; // Dikurangi untuk performa mobile
     
     for (let i = 0; i < heartCount; i++) {
         const heart = document.createElement('div');
@@ -478,8 +531,8 @@ function createHearts() {
         
         // Posisi acak
         const x = Math.random() * 100;
-        const delay = Math.random() * 8;
-        const duration = 6 + Math.random() * 4;
+        const delay = Math.random() * 6;
+        const duration = 5 + Math.random() * 3;
         
         heart.style.left = `${x}%`;
         heart.style.animationDelay = `${delay}s`;
@@ -497,10 +550,25 @@ let isMusicPlaying = false;
 
 musicControl.addEventListener('click', function() {
     if (isMusicPlaying) {
-        // Logika untuk menghentikan musik (jika menggunakan SoundCloud Widget API)
         musicControl.innerHTML = '<i>♪</i>';
     } else {
-        // Logika untuk memutar musik
+        musicControl.innerHTML = '<i>❚❚</i>';
+    }
+    isMusicPlaying = !isMusicPlaying;
+});
+
+// Event listener untuk touch devices
+musicControl.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    this.style.transform = 'scale(0.95)';
+});
+
+musicControl.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    this.style.transform = 'scale(1.1)';
+    if (isMusicPlaying) {
+        musicControl.innerHTML = '<i>♪</i>';
+    } else {
         musicControl.innerHTML = '<i>❚❚</i>';
     }
     isMusicPlaying = !isMusicPlaying;
@@ -581,10 +649,35 @@ function updateProgress() {
 }
 
 // ============================
-// INISIALISASI
+// INISIALISASI DAN OPTIMASI MOBILE
 // ============================
-createStars();
-createHearts();
+document.addEventListener('DOMContentLoaded', function() {
+    createStars();
+    createHearts();
+    
+    // Mencegah zoom double tap di iOS
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+    
+    // Mencegah context menu di mobile
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+});
+
+// Handle orientation change
+window.addEventListener('orientationchange', function() {
+    // Beri waktu untuk orientasi berubah
+    setTimeout(function() {
+        window.scrollTo(0, 0);
+    }, 100);
+});
 </script>
 
 </body>
