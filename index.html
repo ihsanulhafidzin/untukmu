@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Puisi Cinta</title>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: #fff;
+        font-family: "Georgia", serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Efek bintang latar belakang */
+    .stars {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .star {
+        position: absolute;
+        background-color: #fff;
+        border-radius: 50%;
+        animation: twinkle 5s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+        0%, 100% { opacity: 0.2; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Efek partikel hati */
+    .hearts {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .heart {
+        position: absolute;
+        font-size: 20px;
+        color: #ff4f8a;
+        opacity: 0;
+        animation: float 8s linear infinite;
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(100vh) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.7;
+        }
+        90% {
+            opacity: 0.7;
+        }
+        100% {
+            transform: translateY(-100px) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
+        max-width: 800px;
+        position: relative;
+        z-index: 2;
+    }
+
+    #startScreen, .page, #endScreen {
+        text-align: center;
+        display: none;
+        padding: 40px 30px;
+        width: 100%;
+        line-height: 1.8;
+        font-size: 26px;
+        animation: fadeIn 1s ease-out;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 20px;
+    }
+
+    @keyframes fadeIn {
+        from { 
+            opacity: 0; 
+            transform: translateY(30px) scale(0.95);
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    #startScreen {
+        display: block;
+    }
+
+    .title {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        background: linear-gradient(45deg, #ff4f8a, #ff8fab, #ffb3c6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 5px 15px rgba(255, 79, 138, 0.3);
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        color: #e0e0e0;
+        font-style: italic;
+    }
+
+    .btn {
+        padding: 16px 40px;
+        background: linear-gradient(45deg, #ff4f8a, #e91e63);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-size: 22px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        font-weight: bold;
+        box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn:hover {
+        background: linear-gradient(45deg, #ff6b9d, #ff4f8a);
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(233, 30, 99, 0.6);
+    }
+
+    .btn:active {
+        transform: translateY(-2px);
+    }
+
+    .btn::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .btn:hover::after {
+        left: 100%;
+    }
+
+    #nextBtn, #restartBtn {
+        display: none;
+        margin-top: 0;
+    }
+
+    .page-content {
+        min-height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .music-control {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 10;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .music-control:hover {
+        transform: scale(1.1);
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .music-control i {
+        font-size: 28px;
+        color: #ff4f8a;
+    }
+
+    .progress-container {
+        width: 100%;
+        max-width: 600px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 15px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #ff4f8a, #ff8fab);
+        border-radius: 10px;
+        transition: width 0.5s ease;
+        box-shadow: 0 0 10px rgba(255, 79, 138, 0.5);
+    }
+
+    .page-indicator {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 20px;
+    }
+
+    /* Style untuk gambar penutup */
+    .closing-image {
+        max-width: 300px;
+        max-height: 300px;
+        border-radius: 20px;
+        margin: 30px 0;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        animation: imageFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes imageFloat {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-10px) scale(1.02); }
+    }
+
+    .closing-message {
+        font-size: 1.3rem;
+        margin: 20px 0;
+        color: #ffb3c6;
+        font-style: italic;
+        text-shadow: 0 2px 10px rgba(255, 179, 198, 0.3);
+    }
+
+    /* Efek teks berkilau */
+    .shimmer {
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        background-size: 200% 100%;
+        animation: shimmer 3s infinite;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    /* Responsif untuk perangkat mobile */
+    @media (max-width: 768px) {
+        .title {
+            font-size: 2.5rem;
+        }
+        
+        .page {
+            font-size: 22px;
+            padding: 30px 20px;
+        }
+        
+        .btn {
+            padding: 14px 35px;
+            font-size: 20px;
+        }
+        
+        .page-content {
+            min-height: 200px;
+            margin-bottom: 20px;
+        }
+        
+        .closing-image {
+            max-width: 250px;
+            max-height: 250px;
+        }
+        
+        .closing-message {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .closing-image {
+            max-width: 200px;
+            max-height: 200px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Efek bintang latar belakang -->
+<div class="stars" id="stars"></div>
+
+<!-- Efek partikel hati -->
+<div class="hearts" id="hearts"></div>
+
+<!-- 🔊 SoundCloud Player — src di-set setelah tombol diklik -->
+<iframe
+  id="sound"
+  width="0"
+  height="0"
+  scrolling="no"
+  frameborder="no"
+  allow="autoplay">
+</iframe>
+
+<div class="container">
+    <!-- 🟣 HALAMAN AWAL -->
+    <div id="startScreen">
+        <h1 class="title">Puisi untuk Cintaku ratus pesona gadis alban</h1>
+        <p class="subtitle">Sebuah perjalanan kata tentang cinta dan takdir</p>
+        <button class="btn" onclick="startPoem()">Mulai Membaca</button>
+    </div>
+
+    <!-- 🟣 HALAMAN PUISI PER PARAGRAF -->
+    <div id="page1" class="page">
+        <div class="page-content"></div>
+    </div>
+    <div id="page2" class="page">
+        <div class="page-content"></div>
+    </div>
+    <div id="page3" class="page">
+        <div class="page-content"></div>
+    </div>
+    <div id="page4" class="page">
+        <div class="page-content"></div>
+    </div>
+
+    <!-- 🟣 HALAMAN PENUTUP DENGAN GAMBAR -->
+    <div id="endScreen">
+        <h2 class="title" style="font-size: 2.5rem;">Terima Kasih</h2>
+        <p class="closing-message">Untuk semua momen indah yang telah kita lewati bersama</p>
+        
+        <!-- Ganti URL gambar di bawah ini dengan gambar yang Anda inginkan -->
+        <img src="ga.jpg"alt="Momen Indah" 
+             class="closing-image">
+        
+        <p class="closing-message">Selalu ada untukmu, hari ini dan selamanya</p>
+        <button class="btn" id="restartBtn" onclick="restartPoem()">Baca Lagi</button>
+    </div>
+
+    <!-- Progress bar dan indikator halaman -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="page-indicator" id="page-indicator">1 / 4</div>
+
+    <!-- Tombol Lanjut di bawah -->
+    <button id="nextBtn" class="btn" onclick="nextPage()">Lanjut</button>
+</div>
+
+<!-- Kontrol musik -->
+<div class="music-control" id="music-control">
+    <i>♪</i>
+</div>
+
+<script>
+const paragraphs = [
+`Di antara sunyi yang jatuh perlahan,
+kau hadir memecahkan sepi yang lama menetap.
+Aku selalu mengingat kembali awal pertemuan kita
+di setiap hariku
+karena semesta harus tahu
+betapa besar sayangku padamu.`,
+
+`Kau seperti angin yang berhembus lembut,
+menyelinap masuk ke celah-celah hatiku
+yang hampir saja membeku.
+Tanpa suara, tanpa jeda, tanpa permisi,
+namun cukup untuk membuat seluruh duniaku kembali berbunga.`,
+
+`Jika cinta adalah sebuah perjalanan,
+maka langkahku akan terus menuju dirimu
+meski waktu berubah arah,
+meski dunia berganti warna.
+Sebab caraku mencintaimu
+adalah nyala yang tak pernah padam.`,
+
+`Dan bila suatu hari kau bertanya
+mengapa aku tak pernah letih menunggumu,
+akan kujawab perlahan,
+dengan suara paling jujur dari hatiku:
+karena dalam dirimulah
+hatiku menemukan rumahnya.`
+];
+
+let pageNow = 1;
+let charIndex = 0;
+let speed = 40; // kecepatan ketikan
+
+// ============================
+// MEMBUAT BINTANG-BINTANG
+// ============================
+function createStars() {
+    const starsContainer = document.getElementById('stars');
+    const starCount = 200;
+    
+    for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        
+        // Posisi acak
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        
+        // Ukuran acak
+        const size = Math.random() * 3;
+        
+        // Durasi animasi acak
+        const duration = 3 + Math.random() * 7;
+        const delay = Math.random() * 5;
+        
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.animationDuration = `${duration}s`;
+        star.style.animationDelay = `${delay}s`;
+        
+        starsContainer.appendChild(star);
+    }
+}
+
+// ============================
+// MEMBUAT PARTIKEL HATI
+// ============================
+function createHearts() {
+    const heartsContainer = document.getElementById('hearts');
+    const heartCount = 15;
+    
+    for (let i = 0; i < heartCount; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤';
+        
+        // Posisi acak
+        const x = Math.random() * 100;
+        const delay = Math.random() * 8;
+        const duration = 6 + Math.random() * 4;
+        
+        heart.style.left = `${x}%`;
+        heart.style.animationDelay = `${delay}s`;
+        heart.style.animationDuration = `${duration}s`;
+        
+        heartsContainer.appendChild(heart);
+    }
+}
+
+// ============================
+// KONTROL MUSIK
+// ============================
+const musicControl = document.getElementById('music-control');
+let isMusicPlaying = false;
+
+musicControl.addEventListener('click', function() {
+    if (isMusicPlaying) {
+        // Logika untuk menghentikan musik (jika menggunakan SoundCloud Widget API)
+        musicControl.innerHTML = '<i>♪</i>';
+    } else {
+        // Logika untuk memutar musik
+        musicControl.innerHTML = '<i>❚❚</i>';
+    }
+    isMusicPlaying = !isMusicPlaying;
+});
+
+function startPoem() {
+    document.getElementById("startScreen").style.display = "none";
+
+    // 🎵 Mulai musik SoundCloud setelah tombol diklik
+    document.getElementById("sound").src =
+    "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nanda-aruna/andmesh-anugerah-terindah-official-music-video&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false";
+
+    // Update progress dan indikator halaman
+    updateProgress();
+    showPage(pageNow);
+    
+    // Set musik sedang diputar
+    isMusicPlaying = true;
+    musicControl.innerHTML = '<i>❚❚</i>';
+}
+
+function showPage(num) {
+    charIndex = 0;
+    const page = document.getElementById("page" + num);
+    const pageContent = page.querySelector('.page-content');
+    pageContent.innerHTML = "";
+    page.style.display = "block";
+    typeText(pageContent, paragraphs[num - 1]);
+}
+
+function typeText(element, text) {
+    if (charIndex < text.length) {
+        element.innerHTML += text[charIndex];
+        charIndex++;
+        setTimeout(() => typeText(element, text), speed);
+    } else {
+        // setelah paragraf selesai → tampilkan tombol lanjut
+        document.getElementById("nextBtn").style.display = "block";
+    }
+}
+
+function nextPage() {
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("page" + pageNow).style.display = "none";
+
+    pageNow++;
+    if (pageNow <= paragraphs.length) {
+        updateProgress();
+        showPage(pageNow);
+    } else {
+        // Jika sudah di halaman terakhir, tampilkan halaman penutup
+        showEndScreen();
+    }
+}
+
+function showEndScreen() {
+    document.getElementById("progress-bar").style.width = "100%";
+    document.getElementById("page-indicator").textContent = "Selesai";
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("endScreen").style.display = "block";
+    document.getElementById("restartBtn").style.display = "block";
+}
+
+function restartPoem() {
+    pageNow = 1;
+    document.getElementById("endScreen").style.display = "none";
+    document.getElementById("restartBtn").style.display = "none";
+    updateProgress();
+    showPage(pageNow);
+}
+
+function updateProgress() {
+    const progressBar = document.getElementById('progress-bar');
+    const pageIndicator = document.getElementById('page-indicator');
+    
+    progressBar.style.width = `${((pageNow - 1) / paragraphs.length) * 100}%`;
+    pageIndicator.textContent = `${pageNow} / ${paragraphs.length}`;
+}
+
+// ============================
+// INISIALISASI
+// ============================
+createStars();
+createHearts();
+</script>
+
+</body>
+</html>
